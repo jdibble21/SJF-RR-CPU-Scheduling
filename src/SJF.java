@@ -21,28 +21,63 @@ public class SJF implements Algorithm
     }
 
     public void schedule(){
-        chooseShortestTask();
+        System.out.println("Shortest Job First Scheduling \n");
+
+        //to keep track of the total waiting time
+        int totalWaitingTime = 0;
+
+        Task currentTask;
+        List<Task> tasks = getAvailableTasks();
+        System.out.println("Available tasks: " + tasks);
+        int shortestIndex = pickShortestTaskIndex(tasks);
+        System.out.println("Shortest tasks burst time is: " + queue.get(shortestIndex).getBurst());
+
+        /*
+        while (!queue.isEmpty()) {
+
+
+            currentTask = pickNextTask();
+
+            //the waiting time for a process in FCFS is the time it is given the CPU minus its arrival time
+            int wTime = 0;
+            if (CPU.getCurrentTime() > currentTask.getArrivalTime()){
+                wTime = CPU.getCurrentTime() - currentTask.getArrivalTime();
+            }
+            totalWaitingTime += wTime;
+
+            CPU.run(currentTask, currentTask.getBurst());
+
+            System.out.println(currentTask.getName() + " finished at time "+CPU.getCurrentTime() + ". Its waiting time is: " + wTime);
+
+            // remove the completed process
+            queue.remove(currentTask);
+        }
+
+         */
     }
 
     public Task pickNextTask() {
         return queue.get(taskIndex);
     }
 
-    public void chooseShortestTask(){
-        // get current queue burst lengths and indices
-        HashMap<Integer,Integer> burstVals = new HashMap<>();
-        for(int i=0; i < queue.size(); i++){
-            burstVals.put(i, queue.get(i).getBurst());
-        }
-        int minValue = 0;
-        for(int i=0; i < burstVals.size() - 1; i++){
-            minValue = burstVals.get(i);
-            if(burstVals.get(i+1) < minValue){
-                minValue = burstVals.get(i+1);
+    public Integer pickShortestTaskIndex(List<Task> taskList){
+        int shortestIndex = 0;
+        for(int i=0; i < taskList.size() - 1; i++){
+            shortestIndex = i;
+            if(queue.get(shortestIndex).getBurst() > queue.get(i+1).getBurst()){
+                shortestIndex = i + 1;
             }
         }
-        System.out.println(minValue);
+        return shortestIndex;
     }
-
-
+    public List<Task> getAvailableTasks() {
+        List<Task> taskList = new ArrayList<>();
+        int currentTime = CPU.getCurrentTime();
+        for(int i=0; i < queue.size(); i++){
+            if(queue.get(i).getArrivalTime() <= currentTime){
+                taskList.add(queue.get(i));
+            }
+        }
+        return taskList;
+    }
 }

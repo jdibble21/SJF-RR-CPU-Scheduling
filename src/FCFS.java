@@ -26,7 +26,7 @@ public class FCFS implements Algorithm
 
         while (!queue.isEmpty()) {
             currentTask = pickNextTask();
-            System.out.println("queue currently: "+ queue);
+
             //the waiting time for a process in FCFS is the time it is given the CPU minus its arrival time
             int wTime = 0;
             if (CPU.getCurrentTime() > currentTask.getArrivalTime()){
