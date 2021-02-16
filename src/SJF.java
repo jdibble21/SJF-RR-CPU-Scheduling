@@ -13,7 +13,7 @@ public class SJF implements Algorithm
     //the total number of processes to be scheduled
     private final int numTasks;
 
-    private Integer taskIndex;
+    private Integer shortestIndex;
 
     public SJF(List<Task> queue){
         this.queue = queue;
@@ -25,16 +25,12 @@ public class SJF implements Algorithm
 
         //to keep track of the total waiting time
         int totalWaitingTime = 0;
-
         Task currentTask;
-        List<Task> tasks = getAvailableTasks();
-        System.out.println("Available tasks: " + tasks);
-        int shortestIndex = pickShortestTaskIndex(tasks);
-        System.out.println("Shortest tasks burst time is: " + queue.get(shortestIndex).getBurst());
-
-        /*
+        List<Task> availableTasks;
         while (!queue.isEmpty()) {
 
+            availableTasks = getAvailableTasks();
+            shortestIndex = pickShortestTaskIndex(availableTasks);
 
             currentTask = pickNextTask();
 
@@ -53,11 +49,11 @@ public class SJF implements Algorithm
             queue.remove(currentTask);
         }
 
-         */
+
     }
 
     public Task pickNextTask() {
-        return queue.get(taskIndex);
+        return queue.get(shortestIndex);
     }
 
     public Integer pickShortestTaskIndex(List<Task> taskList){
