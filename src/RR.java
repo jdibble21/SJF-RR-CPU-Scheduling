@@ -47,16 +47,16 @@ public class RR implements Algorithm
 
             CPU.run(currentTask, timeSlice);
             System.out.println(currentTask.getName() + " finished at time "+CPU.getCurrentTime() + ". Its waiting time is: " + wTime);
+
+            // deduct quantum time from burst length
             queue.get(queueIndex).setBurst(currentTask.getBurst() - timeQuantum);
 
-            // point queue index to choose next task, start at beginning of array if
-            // it has traversed entire array.
+            // point queue index to choose next task
             queueIndex++;
 
-            // check if task is finished, and remove if so
+            // check if task is finished, and remove if so, and backtrack index to account for it
             if(currentTask.getBurst() <= 0){
                 queue.remove(currentTask);
-                System.out.println("AFTER removing element, queue looks like: " + queue);
                 queueIndex--;
             }
             if(queueIndex >= queue.size()){
