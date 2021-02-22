@@ -9,7 +9,6 @@ import java.util.*;
 public class SJF implements Algorithm
 {
     private final List<Task> queue;
-
     //the total number of processes to be scheduled
     private final int numTasks;
 
@@ -34,7 +33,7 @@ public class SJF implements Algorithm
 
             currentTask = pickNextTask();
 
-            //the waiting time for a process in FCFS is the time it is given the CPU minus its arrival time
+            //the waiting time for a process in SJF is the time it is given the CPU minus its arrival time
             int wTime = 0;
             if (CPU.getCurrentTime() > currentTask.getArrivalTime()){
                 wTime = CPU.getCurrentTime() - currentTask.getArrivalTime();
@@ -48,6 +47,11 @@ public class SJF implements Algorithm
             // remove the completed process
             queue.remove(currentTask);
         }
+        //need to cast either the numerator or the denominator to the double type
+        //otherwise, when both are integers, their division result will always be rounded to integer
+        double averageWaitingTime = totalWaitingTime / (double) numTasks;
+        //use printf for formatted out (only show two digits after decimal points)
+        System.out.printf("\nThe average waiting time is: %.2f\n", averageWaitingTime);
 
 
     }
@@ -69,9 +73,9 @@ public class SJF implements Algorithm
     public List<Task> getAvailableTasks() {
         List<Task> taskList = new ArrayList<>();
         int currentTime = CPU.getCurrentTime();
-        for(int i=0; i < queue.size(); i++){
-            if(queue.get(i).getArrivalTime() <= currentTime){
-                taskList.add(queue.get(i));
+        for (Task task : queue) {
+            if (task.getArrivalTime() <= currentTime) {
+                taskList.add(task);
             }
         }
         return taskList;
