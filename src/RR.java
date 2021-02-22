@@ -11,22 +11,21 @@ import java.util.*;
 public class RR implements Algorithm
 {
     private final List<Task> queue;
-    private HashMap<String,Integer> progressMap;
 
     //the total number of processes to be scheduled
     private final int numTasks;
     private final int timeQuantum = 5;
+    private int queueIndex;
+    private List<Task> availableTasks;
 
     public RR(List<Task> queue){
         this.queue = queue;
         numTasks = queue.size();
+        queueIndex = 0;
     }
 
     public void schedule(){
-        // map process name to burst values for tracking
-        for (int i=0; i < queue.size(); i++){
 
-        }
         System.out.println("Round Robin Scheduling \n");
 
         //to keep track of the total waiting time
@@ -34,30 +33,39 @@ public class RR implements Algorithm
 
         Task currentTask;
         while (!queue.isEmpty()) {
-            int processTime = 0;
+
+            int wTime = 0;
+
+            int timeSlice;
             currentTask = pickNextTask();
+            timeSlice = timeQuantum;
+            if(currentTask.getBurst() < timeQuantum){
+                timeSlice = currentTask.getBurst();
+            }
 
 
 
+            CPU.run(currentTask, timeSlice);
+            System.out.println(currentTask.getName() + " finished at time "+CPU.getCurrentTime() + ". Its waiting time is: " + wTime);
+            queue.get(queueIndex).setBurst(currentTask.getBurst() - timeQuantum);
 
-            CPU.run(currentTask, timeQuantum);
-            // remove the completed process
-            queue.remove(currentTask);
+            // point queue index to choose next task, start at beginning of array if
+            // it has traversed entire array.
+            queueIndex++;
+
+            // check if task is finished, and remove if so
+            if(currentTask.getBurst() <= 0){
+                queue.remove(currentTask);
+                System.out.println("AFTER removing element, queue looks like: " + queue);
+                queueIndex--;
+            }
+            if(queueIndex >= queue.size()){
+                queueIndex = 0;
+            }
         }
     }
 
     public Task pickNextTask(){
-        return queue.get(0);
-    }
-
-    public List<Task> getAvailableTasks() {
-        List<Task> taskList = new ArrayList<>();
-        int currentTime = CPU.getCurrentTime();
-        for (Task task : queue) {
-            if (task.getArrivalTime() <= currentTime) {
-                taskList.add(task);
-            }
-        }
-        return taskList;
+        return queue.get(queueIndex);
     }
 }

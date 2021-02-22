@@ -53,7 +53,7 @@ public class Driver
                 scheduler = new SJF(queue);
                 break;
             case "RR":
-                //scheduler = new RR(queue);
+                scheduler = new RR(queue);
                 break;
             default:
                 System.err.println("Invalid algorithm");
