@@ -33,12 +33,15 @@ public class SJF implements Algorithm
 
             currentTask = pickNextTask();
 
-            //the waiting time for a process in SJF is the time it is given the CPU minus its arrival time
-            int wTime = 0;
+            int wTime;
             if (CPU.getCurrentTime() > currentTask.getArrivalTime()){
                 wTime = CPU.getCurrentTime() - currentTask.getArrivalTime();
+            }else{
+                wTime = currentTask.getArrivalTime();
             }
             totalWaitingTime += wTime;
+
+
 
             CPU.run(currentTask, currentTask.getBurst());
 

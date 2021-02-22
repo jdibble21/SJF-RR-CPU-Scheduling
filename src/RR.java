@@ -34,7 +34,7 @@ public class RR implements Algorithm
         Task currentTask;
         while (!queue.isEmpty()) {
 
-            int wTime = 0;
+            int wTime;
 
             int timeSlice;
             currentTask = pickNextTask();
@@ -42,6 +42,10 @@ public class RR implements Algorithm
             if(currentTask.getBurst() < timeQuantum){
                 timeSlice = currentTask.getBurst();
             }
+
+            wTime = CPU.getCurrentTime() - currentTask.getArrivalTime();
+
+            totalWaitingTime += wTime;
 
 
 
@@ -63,6 +67,11 @@ public class RR implements Algorithm
                 queueIndex = 0;
             }
         }
+        //need to cast either the numerator or the denominator to the double type
+        //otherwise, when both are integers, their division result will always be rounded to integer
+        double averageWaitingTime = totalWaitingTime / (double) numTasks;
+        //use printf for formatted out (only show two digits after decimal points)
+        System.out.printf("\nThe average waiting time is: %.2f\n", averageWaitingTime);
     }
 
     public Task pickNextTask(){
